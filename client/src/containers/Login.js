@@ -8,18 +8,12 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // email: "test@example.com",
-      // password: "hunter2"
-      email: "",
-      password: ""
+      email: "test@example.com",
+      password: "hunter2"
+      // email: "",
+      // password: ""
     };
   }
-
-  // handleNameChange = e => {
-  //   this.setState({
-  //     name: e.target.value
-  //   });
-  // };
 
   handleEmailChange = e => {
     this.setState({
@@ -41,7 +35,7 @@ class Login extends React.Component {
         password: this.state.password
       })
       .then(response => {
-        debugger;
+        this.props.setToken(response.data.token);
       });
   };
 
