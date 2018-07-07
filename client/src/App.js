@@ -1,32 +1,38 @@
+import { connect } from "react-redux";
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
 import Login from "./containers/Login";
+import Home from "./containers/Home";
 
-class App extends React.Component {
-  state = { token: null };
-  updateToken = token => {
-    this.setState({ token });
-  };
-  render() {
-    return (
-      <React.Fragment>
-        <Route
-          exact
-          path="/"
-          render={() => {
-            <Redirect to="/login" />;
-          }}
-        />
-        <Route
-          path="/login"
-          render={() => (
-            <Login token={this.state.token} setToken={this.updateToken} />
-          )}
-        />
-        {/* <Route path="/profile" component={Profile} /> */}
-      </React.Fragment>
-    );
-  }
-}
+const App = props => {
+  const { token } = props;
+  return (
+    <Switch>
+      <Route
+        exact
+        path="/"
+        render={() => {
+          if (token) {
+            return <Home />;
+          }
+          return <Redirect push to="/login" />;
+        }}
+      />
+      <Route
+        path="/login"
+        render={() => {
+          if (token) {
+            return <Redirect push exact to="/" />;
+          }
+          return <Login />;
+        }}
+      />
+    </Switch>
+  );
+};
 
-export default App;
+const mapStateToProps = state => ({
+  token: state.token
+});
+
+export default withRouter(connect(mapStateToProps)(App));
