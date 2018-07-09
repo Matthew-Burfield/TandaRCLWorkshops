@@ -1,13 +1,45 @@
 import { createStore } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const initialState = { currentUser: null };
+const initialState = {
+  token: null,
+  currentUser: null,
+  postData: {
+    count: 0,
+    items: [],
+    next: true,
+    page: 0
+  }
+};
+
+const persistConfig = {
+  key: "root",
+  storage
+};
+
+const cloneState = state => ({
+  ...state,
+  postData: {
+    ...state.postData
+  }
+});
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESS": {
       return {
-        ...store,
+        ...cloneState(state),
         token: action.payload
+      };
+    }
+    case "LOGOUT": {
+      return initialState;
+    }
+    case "POSTS_LOADED": {
+      return {
+        ...cloneState(state),
+        postData: action.payload
       };
     }
     default:
@@ -15,6 +47,7 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(reducer);
+const persistedReducer = persistReducer(persistConfig, reducer);
 
-export default store;
+export const store = createStore(persistedReducer);
+export const persistor = persistStore(store);
