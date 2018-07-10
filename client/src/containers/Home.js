@@ -1,6 +1,8 @@
 import axios from "axios";
 import { connect } from "react-redux";
 import React from "react";
+import Post from '../components/Post';
+import styles from '../styles.module.css';
 
 class Home extends React.Component {
   componentDidMount() {
@@ -15,10 +17,14 @@ class Home extends React.Component {
   }
   render() {
     return (
-      <div style={{ background: "red", height: "100%", width: "100%" }}>
-        <h1>Profile Page</h1>
-        <button onClick={this.props.logout}>Logout</button>
-        {this.props.posts.map(post => <div key={post.body}>{post.body}</div>)}
+      <div className={styles.app}>
+        <div className={styles.profileScroller}>
+          <header style={{ textAlign: 'center' }}>
+            <h1>Profile Page</h1>
+          </header>
+          <button onClick={this.props.logout}>Logout</button>
+          {this.props.posts.map(post => <Post key={post.id} {...post} />)}
+        </div>
       </div>
     );
   }
