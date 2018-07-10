@@ -1,7 +1,8 @@
-import React from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import React from "react";
 import Panda from "../components/Panda";
-import Bamboo from "../components/Bamboo";
+// import Bamboo from "../components/Bamboo";
 import styles from "../styles.module.css";
 
 class Login extends React.Component {
@@ -35,7 +36,7 @@ class Login extends React.Component {
         password: this.state.password
       })
       .then(response => {
-        this.props.setToken(response.data.token);
+        this.props.login(response.data.token);
       });
   };
 
@@ -68,4 +69,11 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  login: token => dispatch({ type: "LOGIN_SUCCESS", payload: token })
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Login);
